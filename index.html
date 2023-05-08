@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>present02</title>
+		<link rel="stylesheet" href="/live2d/css/live2d.css" />
+		<link rel="stylesheet" type="text/css" href="index.css"/>
+	</head>
+	<body>
+		<div class="bjimg"></div>
+		<div id="live2d-widget">
+		        <canvas id="live2dcanvas"/>
+		</div>
+		
+		
+		<div id="app" class="style1">
+ <div id="cont">
+ 	
+ 	<img src="image/a.jpg" class="ima" id="a">
+ 	
+ 	<img src="image/b.jpg" class="ima" id="b">
+ 	
+ 	<img src="image/c.jpg" class="ima" id="c">
+ 	
+ 	<img src="image/d.jpg" class="ima" id="d">
+ 	
+ 	<!-- <img src="image/e.jpg" class="ima" id="e">
+ 	
+ 	<img src="image/f.jpg" class="ima" id="f">
+ 	
+ 	<img src="image/g.jpg" class="ima" id="g">
+ 	
+ 	<img src="image/h.jpg" class="ima" id="h"> -->
+ 
+ </div>
+    </div>
+		<audio autoplay="autoplay" controls="controls"loop="loop" preload="auto"
+		src="曲1.mp3" style="position:fixed; right:0px; bottom:5px;" id="vd" >
+		  		你的浏览器版本太低，不支持audio标签
+		</audio>
+ <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+		<script>
+		    new Vue({
+		        el: '#app',
+		        data: {   
+				   
+		        },
+		       
+				methods: {
+		           
+		        }
+		    });
+			
+		</script>
+		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script src="https://eqcn.ajz.miesnfu.com/wp-content/plugins/wp-3d-pony/live2dw/lib/L2Dwidget.min.js"></script>
+		<script>
+		    L2Dwidget.init({
+		        "model": {
+		            jsonPath: "https://unpkg.com/live2d-widget-model-wanko/assets/wanko.model.json",//这里改模型，前面后面都要改
+		            "scale": 1
+		        },
+		        "display": {
+		            "position": "left",//设置看板娘的上下左右位置
+		            "width": 100,
+		            "height": 100,
+		            "hOffset": 30,
+		            "vOffset": 0
+		        },
+		        "mobile": {
+		            "show": true,
+		            "scale": 0.5
+		        },
+		        "react": {
+		            "opacityDefault": 1,//设置透明度
+		            "opacityOnHover": 0.2
+		        }
+		    });
+		    window.onload = function () {
+		        $("#live2dcanvas").attr("style", "position: fixed; opacity: 0.7; left: 170px; bottom: 0px; z-index: 1; pointer-events: none;")
+		    }
+		</script>
+		<script>
+		function clickEffect() {
+		  let balls = [];
+		  let longPressed = false;
+		  let longPress;
+		  let multiplier = 0;
+		  let width, height;
+		  let origin;
+		  let normal;
+		  let ctx;
+		  const colours = ["#F73859", "#14FFEC", "#00E0FF", "#FF99FE", "#FAF15D"];
+		  const canvas = document.createElement("canvas");
+		  document.body.appendChild(canvas);
+		  canvas.setAttribute("style", "width: 100%; height: 100%; top: 0; left: 0; z-index: 99999; position: fixed; pointer-events: none;");
+		  const pointer = document.createElement("span");
+		  pointer.classList.add("pointer");
+		  document.body.appendChild(pointer);
+		 
+		  if (canvas.getContext && window.addEventListener) {
+		    ctx = canvas.getContext("2d");
+		    updateSize();
+		    window.addEventListener('resize', updateSize, false);
+		    loop();
+		    window.addEventListener("mousedown", function(e) {
+		      pushBalls(randBetween(10, 20), e.clientX, e.clientY);
+		      document.body.classList.add("is-pressed");
+		      longPress = setTimeout(function(){
+		        document.body.classList.add("is-longpress");
+		        longPressed = true;
+		      }, 500);
+		    }, false);
+		    window.addEventListener("mouseup", function(e) {
+		      clearInterval(longPress);
+		      if (longPressed == true) {
+		        document.body.classList.remove("is-longpress");
+		        pushBalls(randBetween(50 + Math.ceil(multiplier), 100 + Math.ceil(multiplier)), e.clientX, e.clientY);
+		        longPressed = false;
+		      }
+		      document.body.classList.remove("is-pressed");
+		    }, false);
+		    window.addEventListener("mousemove", function(e) {
+		      let x = e.clientX;
+		      let y = e.clientY;
+		      pointer.style.top = y + "px";
+		      pointer.style.left = x + "px";
+		    }, false);
+		  } else {
+		    console.log("canvas or addEventListener is unsupported!");
+		  }
+		 
+		 
+		  function updateSize() {
+		    canvas.width = window.innerWidth * 2;
+		    canvas.height = window.innerHeight * 2;
+		    canvas.style.width = window.innerWidth + 'px';
+		    canvas.style.height = window.innerHeight + 'px';
+		    ctx.scale(2, 2);
+		    width = (canvas.width = window.innerWidth);
+		    height = (canvas.height = window.innerHeight);
+		    origin = {
+		      x: width / 2,
+		      y: height / 2
+		    };
+		    normal = {
+		      x: width / 2,
+		      y: height / 2
+		    };
+		  }
+		  class Ball {
+		    constructor(x = origin.x, y = origin.y) {
+		      this.x = x;
+		      this.y = y;
+		      this.angle = Math.PI * 2 * Math.random();
+		      if (longPressed == true) {
+		        this.multiplier = randBetween(14 + multiplier, 15 + multiplier);
+		      } else {
+		        this.multiplier = randBetween(6, 12);
+		      }
+		      this.vx = (this.multiplier + Math.random() * 0.5) * Math.cos(this.angle);
+		      this.vy = (this.multiplier + Math.random() * 0.5) * Math.sin(this.angle);
+		      this.r = randBetween(8, 12) + 3 * Math.random();
+		      this.color = colours[Math.floor(Math.random() * colours.length)];
+		    }
+		    update() {
+		      this.x += this.vx - normal.x;
+		      this.y += this.vy - normal.y;
+		      normal.x = -2 / window.innerWidth * Math.sin(this.angle);
+		      normal.y = -2 / window.innerHeight * Math.cos(this.angle);
+		      this.r -= 0.3;
+		      this.vx *= 0.9;
+		      this.vy *= 0.9;
+		    }
+		  }
+		 
+		  function pushBalls(count = 1, x = origin.x, y = origin.y) {
+		    for (let i = 0; i < count; i++) {
+		      balls.push(new Ball(x, y));
+		    }
+		  }
+		 
+		  function randBetween(min, max) {
+		    return Math.floor(Math.random() * max) + min;
+		  }
+		 
+		  function loop() {
+		    ctx.fillStyle = "rgba(255, 255, 255, 0)";
+		    ctx.clearRect(0, 0, canvas.width, canvas.height);
+		    for (let i = 0; i < balls.length; i++) {
+		      let b = balls[i];
+		      if (b.r < 0) continue;
+		      ctx.fillStyle = b.color;
+		      ctx.beginPath();
+		      ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2, false);
+		      ctx.fill();
+		      b.update();
+		    }
+		    if (longPressed == true) {
+		      multiplier += 0.2;
+		    } else if (!longPressed && multiplier >= 0) {
+		      multiplier -= 0.4;
+		    }
+		    removeBall();
+		    requestAnimationFrame(loop);
+		  }
+		 
+		  function removeBall() {
+		    for (let i = 0; i < balls.length; i++) {
+		      let b = balls[i];
+		      if (b.x + b.r < 0 || b.x - b.r > width || b.y + b.r < 0 || b.y - b.r > height || b.r < 0) {
+		        balls.splice(i, 1);
+		      }
+		    }
+		  }
+		}
+		//
+		clickEffect();//调用特效函数
+		</script>
+		
+		<script>
+		  const video = document.querySelector('audio');
+		
+		  // auto play when script loaded
+		  video
+		    .play()
+		    .then(() => {
+		      console.log(`autoplay well`);
+		    })
+		    .catch((e) => {
+		      console.log(`autoplay fail, wait for first click`);
+		      if (e instanceof DOMException) {
+		        // play before user intersact
+		        const autoPlayAfterAnyClick = () => {
+		          video.play();
+		          document.removeEventListener('click', autoPlayAfterAnyClick);
+		        };
+		
+		        document.addEventListener('click', autoPlayAfterAnyClick);
+		        throw e;
+		      } else {
+		        // or rethrow
+		        throw e;
+		      }
+		    });
+		</script>
+		<script>
+			var isChromium = window.chrome;
+			var winNav = window.navigator;
+			var vendorName = winNav.vendor;
+			var isOpera = typeof window.opr !== "undefined";
+			var isIEedge = winNav.userAgent.indexOf("Edg") > -1;
+			var isIOSChrome = winNav.userAgent.match("CriOS");
+			
+			if (isIOSChrome) {
+			   // is Google Chrome on IOS
+			} else if(
+			  isChromium !== null &&
+			  typeof isChromium !== "undefined" &&
+			  vendorName === "Google Inc." &&
+			  isOpera === false &&
+			  isIEedge === false
+			) {
+			   // is Google Chrome
+			   
+			} else { 
+			   // not Google Chrome 
+			   alert("建议您使用Chorme浏览器访问本页面")
+			}
+		</script>
+		<style>
+			.style1{
+				color: cornflowerblue;
+				text-align: center;  // 控制元素水平居中	
+			}
+			.style2{
+				margin:0px 130.8px 0px 55px;//上右下左
+			}
+			.style3{
+				margin:0px 140px 0px 0px;//上右下左
+			}
+			.style4{
+				margin:5px 0px 0px 0px;//上右下左
+			}
+			input{
+				color: #aa55ff;
+			}
+			select{
+				color: #aa55ff;
+			}
+			button{
+				background-color: #aa55ff;
+				color: beige;
+				border-color: azure;
+			}
+			table{
+				margin:5px 0px 0px 625px;//上右下左
+			}
+			.studentList {
+			  width: 800px;
+			  margin: 0px auto;
+			  border-collapse: collapse;
+			}
+			.studentList thead tr {
+			  font-size: 18px;
+			  background-color: #6495ED;
+			  height: 60px;
+			  text-align: center;
+			}
+			.studentList td {
+			  height: 60px;
+			  text-align: center;
+			  border: 1px solid #ddd;
+			  border-color: blanchedalmond;
+			}
+			.style5{
+				background-color: #6495ED;
+				font-size: 20px;
+				color: black;
+				border-color: #6495ED;
+			}
+			.btnStyle {
+			  display: block;
+			  padding: 6px 12px;
+			  text-align: center;
+			  white-space: nowrap;
+			  vertical-align: middle;
+			  cursor: pointer;
+			  color: white;
+			  border: 1px solid transparent;
+			  border-radius: 8px;
+			  margin: 15px auto;
+			  margin-bottom: 20px;
+			}
+			
+			.createBtn {
+			  background-color: #d9534f;
+			  border-color: #d43f3a;
+			}
+			.style6{
+				color: black;
+			}
+			.style7{
+				color: cornflowerblue;
+			}
+			.bjimg {
+			      position: fixed;
+			      top: 0;
+			      left: 0;
+			      width: 100%;
+			      height: 100%;
+			      min-width: 1000px;
+			      z-index: -10;
+			      zoom: 1;
+			      background-color: #fff;
+			      background-image: url('背景.jpg') ;
+			      background-repeat: no-repeat;
+			      background-size: cover;
+			      -webkit-background-size: cover;
+			      -o-background-size: cover;
+			      background-position: center 0;
+			}
+			
+		</style>
+	</body>
+</html>

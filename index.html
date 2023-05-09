@@ -35,7 +35,7 @@
  </div>
     </div>
 		<audio autoplay="autoplay" controls="controls"loop="loop" preload="auto"
-		src="曲1.mp3" style="position:fixed; right:0px; bottom:5px;" id="vd" >
+		src="曲1.mp3" style="position:fixed; right:0px; bottom:5px;" id="vd">
 		  		你的浏览器版本太低，不支持audio标签
 		</audio>
  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
@@ -268,6 +268,38 @@
 			   alert("建议您使用Chorme浏览器访问本页面")
 			}
 		</script>
+		<script>
+		    // 这是蛋糕图片的 URL
+		    var cakeImgUrl = './image/cake.png';
+		
+		    // 创建一个新的蛋糕
+		    function createCake() {
+		        var cake = document.createElement('img');
+		        cake.src = cakeImgUrl;
+		        cake.className = 'cake';
+		
+		        // 随机设置蛋糕的初始位置和旋转速度
+		        cake.style.left = Math.random() * window.innerWidth + 'px';
+		        cake.style.top = '-50px'; // 从屏幕顶部开始下落
+		        cake.style.animationDuration = Math.random() * 1.5 + 1 + 's'; // 旋转速度
+		
+		        document.body.appendChild(cake);
+		
+		        // 添加动画效果使蛋糕下落
+		        var fallingInterval = setInterval(function() {
+		            cake.style.top = cake.offsetTop + 1 + 'px';
+		
+		            // 如果蛋糕已经落到屏幕外，就删除它
+		            if (cake.offsetTop > window.innerHeight) {
+		                document.body.removeChild(cake);
+		                clearInterval(fallingInterval);
+		            }
+		        }, 10); // 10 毫秒移动一次，这是下落速度
+		    }
+		
+		    // 每 100 毫秒生成一个新的蛋糕
+		    setInterval(createCake, 500);
+		</script>
 		<style>
 			.style1{
 				color: cornflowerblue;
@@ -359,6 +391,20 @@
 			      -webkit-background-size: cover;
 			      -o-background-size: cover;
 			      background-position: center 0;
+			}
+			.cake {
+			    position: fixed;
+			    max-width: 50px;
+			    z-index: 9999;
+			    pointer-events: none; /* 忽略鼠标事件 */
+			    /* 添加旋转动画 */
+			    animation: spin infinite linear;
+			}
+			
+			/* 定义旋转动画 */
+			@keyframes spin {
+			    from { transform: rotate(0deg); }
+			    to { transform: rotate(360deg); }
 			}
 			
 		</style>

@@ -1,0 +1,190 @@
+/* 圣诞照片树 —— 深夜蓝 + 金色粒子 */
+:root{
+  --p-night: oklch(0.19 0.028 262);
+  --p-night-2: oklch(0.15 0.022 260);
+  --p-gold: oklch(0.82 0.11 85);
+  --p-gold-soft: oklch(0.88 0.08 90);
+  --p-ink: oklch(0.96 0.008 90);
+  --p-ink-2: oklch(0.78 0.015 90);
+
+  --bg: var(--p-night);
+  --text: var(--p-ink);
+  --text-2: var(--p-ink-2);
+  --accent: var(--p-gold);
+  --accent-2: var(--p-gold-soft);
+  --chip-bg: oklch(1 0 0 / 0.06);
+  --chip-bg-hover: oklch(1 0 0 / 0.12);
+  --chip-border: oklch(1 0 0 / 0.14);
+  --radius: 14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font:16px/1.7 "PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",system-ui,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(110vmax 80vmax at 50% 115%, oklch(0.27 0.05 285 / 0.5), transparent 58%),
+    radial-gradient(80vmax 60vmax at 85% -8%, oklch(0.26 0.04 230 / 0.45), transparent 55%),
+    linear-gradient(180deg, var(--p-night-2), var(--bg));
+  min-height:100dvh;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  display:flex;flex-direction:column;
+}
+img{display:block;max-width:100%}
+button{cursor:pointer;font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:8px}
+code{
+  font:0.92em/1.5 ui-monospace,"Cascadia Code",Consolas,monospace;
+  background:oklch(1 0 0 / 0.08);border:1px solid var(--chip-border);
+  border-radius:6px;padding:1px 6px;
+}
+
+/* 背景画布：星星 + 雪 + 粒子树 */
+#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+
+/* 顶栏：标题居中，按钮浮在右上 */
+.topbar{
+  position:relative;z-index:2;
+  padding:clamp(16px,3vh,30px) clamp(18px,4vw,48px) 0;
+}
+.actions{
+  position:absolute;top:clamp(16px,3vh,30px);right:clamp(18px,4vw,48px);
+  display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;max-width:60vw;
+}
+.brand{text-align:center}
+.brand .eyebrow{
+  color:var(--accent-2);font-size:clamp(11px,1.3vw,13px);
+  letter-spacing:0.42em;text-indent:0.42em;font-weight:600;
+}
+.brand h1{
+  margin-top:4px;
+  font-family:"Noto Serif SC","Songti SC","STSong",STZhongsong,"SimSun",serif;
+  font-size:clamp(26px,4vw,40px);font-weight:700;letter-spacing:0.14em;line-height:1.2;
+  color:var(--accent-2);
+  text-shadow:0 0 24px oklch(0.82 0.11 85 / 0.35);
+}
+.brand .sub{margin-top:6px;color:var(--text-2);font-size:clamp(13px,1.5vw,15px);letter-spacing:0.12em}
+.chip{
+  display:inline-flex;align-items:center;gap:8px;
+  min-height:44px;padding:10px 16px;
+  background:var(--chip-bg);border:1px solid var(--chip-border);border-radius:999px;
+  color:var(--text);backdrop-filter:blur(8px);
+  transition:background .2s ease-out,transform .2s ease-out,border-color .2s ease-out;
+}
+.chip:hover{background:var(--chip-bg-hover);transform:translateY(-1px)}
+.chip:active{transform:translateY(0)}
+.chip svg{color:var(--accent-2)}
+.chip[aria-pressed="false"]{color:var(--text-2)}
+.chip[aria-pressed="false"] svg{color:var(--text-2)}
+
+/* 舞台 */
+.stage-wrap{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;min-height:0}
+.stage{
+  position:relative;flex:1;min-height:min(64vh,660px);
+  touch-action:none;user-select:none;-webkit-user-select:none;
+  cursor:grab;
+}
+.stage.dragging{cursor:grabbing}
+.tree{position:absolute;inset:0}
+
+/* 树顶星星 */
+.star-top{
+  position:absolute;left:0;top:0;width:34px;height:34px;margin:-17px 0 0 -17px;
+  color:oklch(0.88 0.12 88);
+  filter:drop-shadow(0 0 10px oklch(0.86 0.13 88 / 0.9)) drop-shadow(0 0 26px oklch(0.86 0.13 88 / 0.5));
+  will-change:transform;
+  animation:starPulse 2.4s ease-in-out infinite;
+}
+@keyframes starPulse{0%,100%{scale:1}50%{scale:1.18}}
+
+/* 挂在树上的拍立得照片 */
+.person{
+  position:absolute;left:0;top:0;
+  width:var(--psize,84px);
+  margin-left:calc(var(--psize,84px) / -2);
+  border:none;background:none;padding:0;
+  will-change:transform,opacity;
+}
+.person .card{
+  display:block;background:oklch(0.97 0.012 95);
+  padding:5px 5px 7px;border-radius:3px;
+  box-shadow:0 8px 22px oklch(0 0 0 / 0.5), 0 0 16px oklch(0.82 0.11 85 / 0.18);
+  transform:rotate(var(--tilt,0deg));
+  transition:transform .2s ease-out;
+}
+.person img{
+  width:100%;aspect-ratio:1;object-fit:cover;border-radius:2px;
+  background:var(--p-night-2);
+  pointer-events:none;
+}
+.person:hover .card,.person:focus-visible .card{transform:rotate(0deg) scale(1.1)}
+.person .tag{
+  position:absolute;left:50%;top:calc(100% + 8px);transform:translateX(-50%);
+  white-space:nowrap;font-size:12px;letter-spacing:0.08em;color:var(--text);
+  background:oklch(0.15 0.02 260 / 0.8);border:1px solid var(--chip-border);
+  padding:2px 10px;border-radius:999px;backdrop-filter:blur(6px);
+  opacity:0;transition:opacity .2s ease-out;pointer-events:none;
+}
+.person:hover .tag,.person:focus-visible .tag{opacity:1}
+
+.hint{
+  position:absolute;left:50%;bottom:14px;transform:translateX(-50%);
+  color:var(--text-2);font-size:13px;letter-spacing:0.14em;white-space:nowrap;
+  pointer-events:none;transition:opacity .6s ease-out;
+}
+.hint.gone{opacity:0}
+.count{
+  text-align:center;color:var(--text-2);font-size:13px;letter-spacing:0.2em;
+  padding:0 16px clamp(14px,3vh,28px);
+}
+.count b{color:var(--accent-2);font-weight:600}
+
+/* 浮层（灯箱 / 说明） */
+.overlay{position:fixed;inset:0;z-index:10;display:grid;place-items:center;padding:20px}
+.overlay[hidden]{display:none}
+.overlay-bg{position:absolute;inset:0;background:oklch(0.12 0.015 260 / 0.72);backdrop-filter:blur(6px)}
+.polaroid{
+  position:relative;background:oklch(0.97 0.01 95);color:oklch(0.25 0.02 260);
+  border-radius:8px;padding:16px 16px 18px;max-width:min(86vw,420px);
+  box-shadow:0 30px 80px oklch(0 0 0 / 0.55);
+  animation:pop-rot .28s ease-out;
+}
+.polaroid .photo-frame{border-radius:4px;overflow:hidden;aspect-ratio:1;background:oklch(0.9 0.02 260)}
+.polaroid img{width:100%;height:100%;object-fit:cover}
+.polaroid figcaption{padding:14px 4px 0;text-align:center}
+.polaroid strong{display:block;font-family:"Noto Serif SC","Songti SC","STSong","SimSun",serif;font-size:20px;letter-spacing:0.08em}
+.polaroid figcaption span{display:block;margin-top:4px;color:oklch(0.45 0.02 260);font-size:14px}
+.panel{
+  position:relative;max-width:min(92vw,520px);
+  background:oklch(0.24 0.02 262);border:1px solid var(--chip-border);border-radius:var(--radius);
+  padding:26px 26px 24px;box-shadow:0 30px 80px oklch(0 0 0 / 0.5);
+  animation:pop .28s ease-out;
+}
+.panel h2{font-family:"Noto Serif SC","Songti SC","STSong","SimSun",serif;font-size:22px;letter-spacing:0.06em;margin-bottom:14px}
+.steps{padding-left:1.3em;display:grid;gap:10px;color:var(--text)}
+.steps li{line-height:1.8}
+.panel .tip{margin-top:14px;color:var(--text-2);font-size:13px}
+.close{
+  position:absolute;top:10px;right:10px;z-index:1;
+  width:40px;height:40px;border-radius:50%;border:none;
+  display:grid;place-items:center;
+  background:oklch(0 0 0 / 0.08);color:inherit;
+  transition:background .2s ease-out,transform .2s ease-out;
+}
+.close:hover{background:oklch(0 0 0 / 0.16);transform:scale(1.06)}
+.panel .close{background:oklch(1 0 0 / 0.08);color:var(--text)}
+.panel .close:hover{background:oklch(1 0 0 / 0.16)}
+
+@keyframes pop{from{opacity:0;transform:scale(0.95)}to{opacity:1}}
+@keyframes pop-rot{from{opacity:0;transform:scale(0.95) rotate(-1.6deg)}to{opacity:1;transform:scale(1) rotate(-1.6deg)}}
+.polaroid{transform:rotate(-1.6deg)}
+
+@media (max-width:640px){
+  .actions{position:static;max-width:none;justify-content:center;margin-top:12px;flex-wrap:wrap}
+  .chip{min-height:40px;padding:8px 13px;font-size:14px;gap:6px}
+  .stage{min-height:56vh}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}

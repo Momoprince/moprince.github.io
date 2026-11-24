@@ -1,0 +1,9 @@
+{
+  "name": "christmas-photo-tree",
+  "version": "1.0.0",
+  "private": true,
+  "description": "圣诞照片树 —— 把身边重要的人的照片挂上一棵会旋转的圣诞树",
+  "scripts": {
+    "dev": "node server.js"
+  }
+}

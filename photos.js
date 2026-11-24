@@ -6,9 +6,9 @@
  * 行数随便加减，蛋糕周围会自动排布。
  */
 window.PEOPLE = [
-  { img: "image/a.jpg", name: "Ta Ⅰ", note: "点开 photos.js，把称呼和这句话换成你想说的。" },
-  { img: "image/b.jpg", name: "Ta Ⅱ", note: "点开 photos.js，把称呼和这句话换成你想说的。" },
-  { img: "image/c.jpg", name: "Ta Ⅲ", note: "点开 photos.js，把称呼和这句话换成你想说的。" },
-  { img: "image/d.jpg", name: "Ta Ⅳ", note: "点开 photos.js，把称呼和这句话换成你想说的。" },
-  { img: "image/e.jpg", name: "Ta Ⅴ", note: "点开 photos.js，把称呼和这句话换成你想说的。" },
+  { img: "image/a.jpg", name: "桃子", note: "点开 photos.js，把这句话换成你想说的。" },
+  { img: "image/b.jpg", name: "桃子", note: "点开 photos.js，把这句话换成你想说的。" },
+  { img: "image/c.jpg", name: "桃子", note: "点开 photos.js，把这句话换成你想说的。" },
+  { img: "image/d.jpg", name: "桃子", note: "点开 photos.js，把这句话换成你想说的。" },
+  { img: "image/e.jpg", name: "桃子", note: "点开 photos.js，把这句话换成你想说的。" },
 ];

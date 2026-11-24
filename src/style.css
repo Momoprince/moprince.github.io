@@ -108,7 +108,7 @@ code{
   background:var(--p-night-2);
   pointer-events:none;
 }
-.person:hover .card,.person:focus-visible .card{transform:rotate(0deg) scale(1.18)}
+.person:hover .card,.person:focus-visible .card{transform:rotate(0deg) scale(2)}
 .person .tag{
   position:absolute;left:50%;top:calc(100% + 8px);transform:translateX(-50%);
   white-space:nowrap;font-size:12px;letter-spacing:0.08em;color:var(--text);
@@ -136,7 +136,7 @@ code{
 .overlay-bg{position:absolute;inset:0;background:oklch(0.12 0.015 260 / 0.72);backdrop-filter:blur(6px)}
 .polaroid{
   position:relative;background:oklch(0.97 0.01 95);color:oklch(0.25 0.02 260);
-  border-radius:8px;padding:16px 16px 18px;max-width:min(92vw,600px);
+  border-radius:8px;padding:16px 16px 18px;max-width:min(94vw,1200px);
   box-shadow:0 30px 80px oklch(0 0 0 / 0.55);
   animation:pop-rot .28s ease-out;
 }

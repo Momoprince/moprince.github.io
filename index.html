@@ -1,412 +1,89 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8">
-		<title>Birthday</title>
-		<link rel="stylesheet" href="/live2d/css/live2d.css" />
-		<link rel="stylesheet" type="text/css" href="index.css"/>
-	</head>
-	<body>
-		<div class="bjimg"></div>
-		<div id="live2d-widget">
-		        <canvas id="live2dcanvas"/>
-		</div>
-		
-		
-		<div id="app" class="style1">
- <div id="cont">
- 	
- 	<img src="image/a.jpg" class="ima" id="a">
- 	
- 	<img src="image/b.jpg" class="ima" id="b">
- 	
- 	<img src="image/c.jpg" class="ima" id="c">
- 	
- 	<img src="image/d.jpg" class="ima" id="d">
- 	
- 	<!-- <img src="image/e.jpg" class="ima" id="e">
- 	
- 	<img src="image/f.jpg" class="ima" id="f">
- 	
- 	<img src="image/g.jpg" class="ima" id="g">
- 	
- 	<img src="image/h.jpg" class="ima" id="h"> -->
- 
- </div>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>圣诞照片树 · 重要的人</title>
+<meta name="description" content="把身边重要的人的头像，挂上一棵会旋转的圣诞树。">
+<link rel="stylesheet" href="./src/style.css">
+</head>
+<body>
+
+<canvas id="bg" aria-hidden="true"></canvas>
+
+<header class="topbar">
+  <div class="actions">
+    <button id="btn-rotate" class="chip" type="button" aria-pressed="true">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 5V1L7 6l5 5V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg>
+      自动旋转
+    </button>
+    <button id="btn-spread" class="chip" type="button" aria-pressed="false">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 2l1.8 5.2L19 5.5l-3.2 4.3L21 12l-6.2 2.1L18 19.5l-5.2-1.7L12 23l-1.8-5.2L5 19.5l3.2-4.4L2 12l6.2-2L4.8 5.5l5.4 1.7z"/></svg>
+      绽放
+    </button>
+    <button id="btn-music" class="chip" type="button" aria-pressed="false">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
+      音乐
+    </button>
+    <button id="btn-help" class="chip" type="button">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 17h-2v-2h2v2zm1.8-7.3c-.5.6-1 .9-1.3 1.2-.3.4-.5.7-.5 1.6h-2c0-1.4.4-2 .9-2.6l1.2-1.3c.4-.4.6-.8.6-1.3 0-.9-.7-1.5-1.7-1.5-1 0-1.7.6-1.8 1.7H8.1C8.2 7.2 9.8 6 12 6c2.1 0 3.6 1.1 3.6 2.9 0 .9-.3 1.6-.8 2.1z"/></svg>
+      换成我的照片
+    </button>
+  </div>
+  <div class="brand">
+    <p class="eyebrow" aria-hidden="true">❄ &nbsp;MERRY CHRISTMAS&nbsp; ❄</p>
+    <h1>圣诞照片树</h1>
+    <p class="sub">把最重要的人，挂上这棵圣诞树</p>
+  </div>
+</header>
+
+<main class="stage-wrap">
+  <div id="stage" class="stage" role="application"
+       aria-label="圣诞照片树：拖动可以旋转，滚轮缩放，点击照片查看大图">
+    <div id="tree" class="tree">
+      <div id="star-top" class="star-top" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="34" height="34"><path fill="currentColor" d="M12 1.5 14.6 8.2l7 .5-5.4 4.5 1.7 6.8L12 17.7 6.1 21l1.7-6.8L2.4 8.7l7-.5z"/></svg>
+      </div>
     </div>
-		<audio autoplay="autoplay" controls="controls"loop="loop" preload="auto"
-		src="曲1.mp3" style="position:fixed; right:0px; bottom:5px;" id="vd">
-		  		你的浏览器版本太低，不支持audio标签
-		</audio>
- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-		<script>
-		    new Vue({
-		        el: '#app',
-		        data: {   
-				   
-		        },
-		       
-				methods: {
-		           
-		        }
-		    });
-			
-		</script>
-		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-		<script src="https://eqcn.ajz.miesnfu.com/wp-content/plugins/wp-3d-pony/live2dw/lib/L2Dwidget.min.js"></script>
-		<script>
-		    L2Dwidget.init({
-		        "model": {
-		            jsonPath: "https://unpkg.com/live2d-widget-model-wanko/assets/wanko.model.json",//这里改模型，前面后面都要改
-		            "scale": 1
-		        },
-		        "display": {
-		            "position": "left",//设置看板娘的上下左右位置
-		            "width": 100,
-		            "height": 100,
-		            "hOffset": 30,
-		            "vOffset": 0
-		        },
-		        "mobile": {
-		            "show": true,
-		            "scale": 0.5
-		        },
-		        "react": {
-		            "opacityDefault": 1,//设置透明度
-		            "opacityOnHover": 0.2
-		        }
-		    });
-		    window.onload = function () {
-		        $("#live2dcanvas").attr("style", "position: fixed; opacity: 0.7; left: 170px; bottom: 0px; z-index: 1; pointer-events: none;")
-		    }
-		</script>
-		<script>
-		function clickEffect() {
-		  let balls = [];
-		  let longPressed = false;
-		  let longPress;
-		  let multiplier = 0;
-		  let width, height;
-		  let origin;
-		  let normal;
-		  let ctx;
-		  const colours = ["#F73859", "#14FFEC", "#00E0FF", "#FF99FE", "#FAF15D"];
-		  const canvas = document.createElement("canvas");
-		  document.body.appendChild(canvas);
-		  canvas.setAttribute("style", "width: 100%; height: 100%; top: 0; left: 0; z-index: 99999; position: fixed; pointer-events: none;");
-		  const pointer = document.createElement("span");
-		  pointer.classList.add("pointer");
-		  document.body.appendChild(pointer);
-		 
-		  if (canvas.getContext && window.addEventListener) {
-		    ctx = canvas.getContext("2d");
-		    updateSize();
-		    window.addEventListener('resize', updateSize, false);
-		    loop();
-		    window.addEventListener("mousedown", function(e) {
-		      pushBalls(randBetween(10, 20), e.clientX, e.clientY);
-		      document.body.classList.add("is-pressed");
-		      longPress = setTimeout(function(){
-		        document.body.classList.add("is-longpress");
-		        longPressed = true;
-		      }, 500);
-		    }, false);
-		    window.addEventListener("mouseup", function(e) {
-		      clearInterval(longPress);
-		      if (longPressed == true) {
-		        document.body.classList.remove("is-longpress");
-		        pushBalls(randBetween(50 + Math.ceil(multiplier), 100 + Math.ceil(multiplier)), e.clientX, e.clientY);
-		        longPressed = false;
-		      }
-		      document.body.classList.remove("is-pressed");
-		    }, false);
-		    window.addEventListener("mousemove", function(e) {
-		      let x = e.clientX;
-		      let y = e.clientY;
-		      pointer.style.top = y + "px";
-		      pointer.style.left = x + "px";
-		    }, false);
-		  } else {
-		    console.log("canvas or addEventListener is unsupported!");
-		  }
-		 
-		 
-		  function updateSize() {
-		    canvas.width = window.innerWidth * 2;
-		    canvas.height = window.innerHeight * 2;
-		    canvas.style.width = window.innerWidth + 'px';
-		    canvas.style.height = window.innerHeight + 'px';
-		    ctx.scale(2, 2);
-		    width = (canvas.width = window.innerWidth);
-		    height = (canvas.height = window.innerHeight);
-		    origin = {
-		      x: width / 2,
-		      y: height / 2
-		    };
-		    normal = {
-		      x: width / 2,
-		      y: height / 2
-		    };
-		  }
-		  class Ball {
-		    constructor(x = origin.x, y = origin.y) {
-		      this.x = x;
-		      this.y = y;
-		      this.angle = Math.PI * 2 * Math.random();
-		      if (longPressed == true) {
-		        this.multiplier = randBetween(14 + multiplier, 15 + multiplier);
-		      } else {
-		        this.multiplier = randBetween(6, 12);
-		      }
-		      this.vx = (this.multiplier + Math.random() * 0.5) * Math.cos(this.angle);
-		      this.vy = (this.multiplier + Math.random() * 0.5) * Math.sin(this.angle);
-		      this.r = randBetween(8, 12) + 3 * Math.random();
-		      this.color = colours[Math.floor(Math.random() * colours.length)];
-		    }
-		    update() {
-		      this.x += this.vx - normal.x;
-		      this.y += this.vy - normal.y;
-		      normal.x = -2 / window.innerWidth * Math.sin(this.angle);
-		      normal.y = -2 / window.innerHeight * Math.cos(this.angle);
-		      this.r -= 0.3;
-		      this.vx *= 0.9;
-		      this.vy *= 0.9;
-		    }
-		  }
-		 
-		  function pushBalls(count = 1, x = origin.x, y = origin.y) {
-		    for (let i = 0; i < count; i++) {
-		      balls.push(new Ball(x, y));
-		    }
-		  }
-		 
-		  function randBetween(min, max) {
-		    return Math.floor(Math.random() * max) + min;
-		  }
-		 
-		  function loop() {
-		    ctx.fillStyle = "rgba(255, 255, 255, 0)";
-		    ctx.clearRect(0, 0, canvas.width, canvas.height);
-		    for (let i = 0; i < balls.length; i++) {
-		      let b = balls[i];
-		      if (b.r < 0) continue;
-		      ctx.fillStyle = b.color;
-		      ctx.beginPath();
-		      ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2, false);
-		      ctx.fill();
-		      b.update();
-		    }
-		    if (longPressed == true) {
-		      multiplier += 0.2;
-		    } else if (!longPressed && multiplier >= 0) {
-		      multiplier -= 0.4;
-		    }
-		    removeBall();
-		    requestAnimationFrame(loop);
-		  }
-		 
-		  function removeBall() {
-		    for (let i = 0; i < balls.length; i++) {
-		      let b = balls[i];
-		      if (b.x + b.r < 0 || b.x - b.r > width || b.y + b.r < 0 || b.y - b.r > height || b.r < 0) {
-		        balls.splice(i, 1);
-		      }
-		    }
-		  }
-		}
-		//
-		clickEffect();//调用特效函数
-		</script>
-		
-		<script>
-		  const video = document.querySelector('audio');
-		
-		  // auto play when script loaded
-		  video
-		    .play()
-		    .then(() => {
-		      console.log(`autoplay well`);
-		    })
-		    .catch((e) => {
-		      console.log(`autoplay fail, wait for first click`);
-		      if (e instanceof DOMException) {
-		        // play before user intersact
-		        const autoPlayAfterAnyClick = () => {
-		          video.play();
-		          document.removeEventListener('click', autoPlayAfterAnyClick);
-		        };
-		
-		        document.addEventListener('click', autoPlayAfterAnyClick);
-		        throw e;
-		      } else {
-		        // or rethrow
-		        throw e;
-		      }
-		    });
-		</script>
-		<script>
-			var isChromium = window.chrome;
-			var winNav = window.navigator;
-			var vendorName = winNav.vendor;
-			var isOpera = typeof window.opr !== "undefined";
-			var isIEedge = winNav.userAgent.indexOf("Edg") > -1;
-			var isIOSChrome = winNav.userAgent.match("CriOS");
-			
-			if (isIOSChrome) {
-			   // is Google Chrome on IOS
-			} else if(
-			  isChromium !== null &&
-			  typeof isChromium !== "undefined" &&
-			  vendorName === "Google Inc." &&
-			  isOpera === false &&
-			  isIEedge === false
-			) {
-			   // is Google Chrome
-			   
-			} else { 
-			   // not Google Chrome 
-			   alert("建议您使用Chorme浏览器访问本页面")
-			}
-		</script>
-		<script>
-		    // 这是蛋糕图片的 URL
-		    var cakeImgUrl = './image/cake.png';
-		
-		    // 创建一个新的蛋糕
-		    function createCake() {
-		        var cake = document.createElement('img');
-		        cake.src = cakeImgUrl;
-		        cake.className = 'cake';
-		
-		        // 随机设置蛋糕的初始位置和旋转速度
-		        cake.style.left = Math.random() * window.innerWidth + 'px';
-		        cake.style.top = '-50px'; // 从屏幕顶部开始下落
-		        cake.style.animationDuration = Math.random() * 1.5 + 1 + 's'; // 旋转速度
-		
-		        document.body.appendChild(cake);
-		
-		        // 添加动画效果使蛋糕下落
-		        var fallingInterval = setInterval(function() {
-		            cake.style.top = cake.offsetTop + 1 + 'px';
-		
-		            // 如果蛋糕已经落到屏幕外，就删除它
-		            if (cake.offsetTop > window.innerHeight) {
-		                document.body.removeChild(cake);
-		                clearInterval(fallingInterval);
-		            }
-		        }, 10); // 10 毫秒移动一次，这是下落速度
-		    }
-		
-		    // 每 100 毫秒生成一个新的蛋糕
-		    setInterval(createCake, 500);
-		</script>
-		<style>
-			.style1{
-				color: cornflowerblue;
-				text-align: center;  // 控制元素水平居中	
-			}
-			.style2{
-				margin:0px 130.8px 0px 55px;//上右下左
-			}
-			.style3{
-				margin:0px 140px 0px 0px;//上右下左
-			}
-			.style4{
-				margin:5px 0px 0px 0px;//上右下左
-			}
-			input{
-				color: #aa55ff;
-			}
-			select{
-				color: #aa55ff;
-			}
-			button{
-				background-color: #aa55ff;
-				color: beige;
-				border-color: azure;
-			}
-			table{
-				margin:5px 0px 0px 625px;//上右下左
-			}
-			.studentList {
-			  width: 800px;
-			  margin: 0px auto;
-			  border-collapse: collapse;
-			}
-			.studentList thead tr {
-			  font-size: 18px;
-			  background-color: #6495ED;
-			  height: 60px;
-			  text-align: center;
-			}
-			.studentList td {
-			  height: 60px;
-			  text-align: center;
-			  border: 1px solid #ddd;
-			  border-color: blanchedalmond;
-			}
-			.style5{
-				background-color: #6495ED;
-				font-size: 20px;
-				color: black;
-				border-color: #6495ED;
-			}
-			.btnStyle {
-			  display: block;
-			  padding: 6px 12px;
-			  text-align: center;
-			  white-space: nowrap;
-			  vertical-align: middle;
-			  cursor: pointer;
-			  color: white;
-			  border: 1px solid transparent;
-			  border-radius: 8px;
-			  margin: 15px auto;
-			  margin-bottom: 20px;
-			}
-			
-			.createBtn {
-			  background-color: #d9534f;
-			  border-color: #d43f3a;
-			}
-			.style6{
-				color: black;
-			}
-			.style7{
-				color: cornflowerblue;
-			}
-			.bjimg {
-			      position: fixed;
-			      top: 0;
-			      left: 0;
-			      width: 100%;
-			      height: 100%;
-			      min-width: 1000px;
-			      z-index: -10;
-			      zoom: 1;
-			      background-color: #fff;
-			      background-image: url('背景.jpg') ;
-			      background-repeat: no-repeat;
-			      background-size: cover;
-			      -webkit-background-size: cover;
-			      -o-background-size: cover;
-			      background-position: center 0;
-			}
-			.cake {
-			    position: fixed;
-			    max-width: 50px;
-			    z-index: 9999;
-			    pointer-events: none; /* 忽略鼠标事件 */
-			    /* 添加旋转动画 */
-			    animation: spin infinite linear;
-			}
-			
-			/* 定义旋转动画 */
-			@keyframes spin {
-			    from { transform: rotate(0deg); }
-			    to { transform: rotate(360deg); }
-			}
-			
-		</style>
-	</body>
+    <p class="hint" id="hint">拖动旋转 · 滚轮缩放 · 点照片看大图</p>
+  </div>
+  <p class="count" id="count" aria-live="polite"></p>
+</main>
+
+<!-- 大图灯箱 -->
+<div id="lightbox" class="overlay" role="dialog" aria-modal="true" aria-labelledby="lb-name" hidden>
+  <div class="overlay-bg" data-close></div>
+  <figure class="polaroid">
+    <button class="close" type="button" data-close aria-label="关闭大图">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7l1.4-1.4 6.3 6.3 6.3-6.3z"/></svg>
+    </button>
+    <div class="photo-frame"><img id="lb-img" alt=""></div>
+    <figcaption>
+      <strong id="lb-name"></strong>
+      <span id="lb-note"></span>
+    </figcaption>
+  </figure>
+</div>
+
+<!-- 换照片说明 -->
+<div id="help" class="overlay" role="dialog" aria-modal="true" aria-labelledby="help-title" hidden>
+  <div class="overlay-bg" data-close></div>
+  <div class="panel">
+    <button class="close" type="button" data-close aria-label="关闭说明">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7l1.4-1.4 6.3 6.3 6.3-6.3z"/></svg>
+    </button>
+    <h2 id="help-title">换成你重要的人</h2>
+    <ol class="steps">
+      <li>把 Ta 们的照片（jpg / png 都可以）复制到项目的 <code>image/</code> 文件夹里。</li>
+      <li>打开项目根目录的 <code>photos.js</code>，把每一行的 <code>img</code> 改成你的照片文件名，<code>name</code> 改成 Ta 的称呼，<code>note</code> 写一句想说的话。</li>
+      <li>保存后刷新页面，圣诞树上就都是你在乎的人了。人数随便加减，树会自己挂好。</li>
+    </ol>
+    <p class="tip">提示：方形或接近方形的照片效果最好，建议每张不超过 500 KB。</p>
+  </div>
+</div>
+
+<script src="./photos.js"></script>
+<audio id="bgm" src="./曲1.mp3" loop preload="auto"></audio>
+<script type="module" src="./src/main.js"></script>
+</body>
 </html>
